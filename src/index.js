@@ -3,20 +3,25 @@ import { fetchCountries } from './fetchCountries';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 
-const input = document.querySelector('input#search-box');
-const countryList = document.querySelector('.country-list');
-const countryInfo = document.querySelector('.country-info');
+const elements = {
+  input: document.querySelector('input#search-box'),
+  countryList: document.querySelector('.country-list'),
+  countryInfo: document.querySelector('.country-info'),
+};
 const DEBOUNCE_DELAY = 300;
 
-input.addEventListener('input', debounce(onSubmitContry, DEBOUNCE_DELAY));
+elements.input.addEventListener(
+  'input',
+  debounce(onSubmitContry, DEBOUNCE_DELAY)
+);
 
 function onSubmitContry(evn) {
   evn.preventDefault();
 
   const inputName = evn.target.value.trim();
   if (!inputName) {
-    countryList.innerHTML = '';
-    countryInfo.innerHTML = '';
+    elements.countryList.innerHTML = '';
+    elements.countryInfo.innerHTML = '';
     return;
   }
 
@@ -27,18 +32,18 @@ function onSubmitContry(evn) {
           'Too many matches found. Please enter a more specific name.'
         );
       } else if (data.length >= 2 && data.length <= 10) {
-        countryList.innerHTML = '';
+        elements.countryList.innerHTML = '';
         createMarkupCountryList(data);
-        countryInfo.innerHTML = '';
+        elements.countryInfo.innerHTML = '';
       } else {
-        countryInfo.innerHTML = '';
+        elements.countryInfo.innerHTML = '';
         createMarkupCountryInfo(data);
-        countryList.innerHTML = '';
+        elements.countryList.innerHTML = '';
       }
     })
     .catch(() => {
-      countryList.innerHTML = '';
-      countryInfo.innerHTML = '';
+      elements.countryList.innerHTML = '';
+      elements.countryInfo.innerHTML = '';
       Notiflix.Notify.failure('Oops, there is no country with that name');
     });
 }
@@ -52,7 +57,7 @@ function createMarkupCountryList(data) {
     </li>`;
     })
     .join('');
-  return countryList.insertAdjacentHTML('beforeend', markup);
+  return elements.countryList.insertAdjacentHTML('beforeend', markup);
 }
 
 function createMarkupCountryInfo(data) {
@@ -78,5 +83,5 @@ function createMarkupCountryInfo(data) {
     })
     .join('');
 
-  return countryInfo.insertAdjacentHTML('beforeend', markup);
+  return elements.countryInfo.insertAdjacentHTML('beforeend', markup);
 }
